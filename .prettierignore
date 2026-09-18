@@ -1,0 +1,7 @@
+dist/
+node_modules/
+Chrome/
+Firefox/
+releases/
+*.zip
+*.xpi

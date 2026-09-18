@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Steam PricePerHour",
+  "version": "1.5.0",
+  "description": "Price/hour insights for Steam search, home, sales, bundles, DLC, and game pages. Powered by SPPH API.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Steam PricePerHour",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://store.steampowered.com/*",
+    "https://steampowered.com/*",
+    "https://spph.vintlgvard.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://store.steampowered.com/*",
+        "https://steampowered.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://spph.vintlgvard.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; default-src 'none'"
+  }
+}

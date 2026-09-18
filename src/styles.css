@@ -209,10 +209,21 @@
   border-radius: 3px;
 }
 
-.game_area_dlc_row .game_area_dlc_price {
+/* Layout compensation for badges. Applied only while the extension is
+   enabled (content script toggles html.spph-page-shift), so disabling
+   the calculation restores Steam's original layout. */
+html.spph-page-shift .game_area_dlc_row .game_area_dlc_price {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+@media screen and (min-width: 751px) {
+  html.spph-page-shift .search_released,
+  html.spph-page-shift .search_reviewscore {
+    position: relative;
+    left: -100px;
+  }
 }
 
 .game_area_dlc_row .spph-ratio-badge--dynamic {
@@ -233,14 +244,6 @@
   padding-top: 0;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   padding-left: 6px;
-}
-
-@media screen and (min-width: 751px) {
-  .search_released,
-  .search_reviewscore {
-    position: relative;
-    left: -100px;
-  }
 }
 
 

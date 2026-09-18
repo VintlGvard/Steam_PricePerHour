@@ -1,0 +1,40 @@
+{
+  "name": "steam-priceperhour",
+  "version": "1.5.0",
+  "description": "Price/hour insights for Steam.",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:chrome && npm run build:firefox",
+    "postbuild": "node -e \"const fs=require('fs');for(const[b,s,d]of[['chrome','dist/chrome','releases/chrome-unpacked'],['firefox','dist/firefox','releases/firefox-unpacked']]){fs.rmSync(d,{recursive:true,force:true});fs.cpSync(s,d,{recursive:true});console.log('✓ '+d+' updated');}\"",
+    "build:chrome": "webpack --config webpack.chrome.js --mode production",
+    "build:firefox": "webpack --config webpack.firefox.js --mode production",
+    "release": "npm run version -- --auto && npm run build && node scripts/pack.js",
+    "version": "node scripts/version.js",
+    "version:auto": "node scripts/version.js --auto",
+    "version:major": "node scripts/version.js major",
+    "version:minor": "node scripts/version.js minor",
+    "version:patch": "node scripts/version.js patch",
+    "dev": "npm run dev:chrome",
+    "dev:chrome": "webpack --config webpack.chrome.js --mode development --watch",
+    "dev:firefox": "webpack --config webpack.firefox.js --mode development --watch",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/"
+  },
+  "devDependencies": {
+    "adm-zip": "^0.6.0",
+    "archiver": "^8.0.0",
+    "copy-webpack-plugin": "^12.0.2",
+    "dotenv": "^16.4.7",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.2",
+    "terser-webpack-plugin": "^5.3.11",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

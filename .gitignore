@@ -1,6 +1,13 @@
 # Dependencies
 node_modules/
 
+# Secrets
+.env
+
+# Build output
+dist/
+releases/
+
 # npm debug/logs
 npm-debug.log*
 yarn-debug.log*
@@ -20,3 +27,4 @@ Thumbs.db
 *.swp
 *.tar.gz
 *.zip
+*.xpi

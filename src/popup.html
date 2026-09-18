@@ -9,29 +9,14 @@
 <body>
   <div class="popup">
     <header class="popup__header">
-      <div class="popup__header-row">
-        <div class="popup__brand">
-          <img class="popup__icon" src="image.png" alt="" width="26" height="26">
-          <div class="popup__brand-text">
-            <h1 class="popup__title" data-i18n="title">Steam PricePerHour</h1>
-            <p class="popup__subtitle" data-i18n="subtitle">Smart value insights for Steam</p>
-          </div>
+      <div class="popup__brand">
+        <img class="popup__icon" src="icons/icon-48.png" alt="" width="32" height="32">
+        <div class="popup__brand-text">
+          <h1 class="popup__title" data-i18n="title">Steam PricePerHour</h1>
+          <p class="popup__subtitle" data-i18n="subtitle">Smart value insights for Steam</p>
         </div>
-        <span id="status-pill" class="popup__pill popup__pill--on" aria-live="polite">ON</span>
       </div>
     </header>
-
-    <div class="popup__card popup__card--toggle">
-      <button id="toggle-enabled" class="popup__toggle" type="button" role="switch" aria-checked="true" data-i18n-aria="toggle-aria">
-        <span class="popup__toggle-track">
-          <span class="popup__toggle-thumb"></span>
-        </span>
-        <span class="popup__toggle-body">
-          <span class="popup__toggle-title" id="toggle-text" data-i18n="toggle-on">Calculation enabled</span>
-          <span class="popup__toggle-hint" id="toggle-hint" data-i18n="toggle-on-hint">Cache + data updates</span>
-        </span>
-      </button>
-    </div>
 
     <section class="popup__section">
       <h2 class="popup__section-title" data-i18n="section-value-mode">Value mode</h2>
@@ -67,7 +52,7 @@
       <h2 class="popup__section-title" data-i18n="section-acceptable-price">Acceptable price</h2>
       <div class="popup__field">
         <label class="popup__label popup__label--block" for="input-acceptable" data-i18n="price-label">Price per hour (Steam currency)</label>
-        <input type="number" id="input-acceptable" class="popup__input" min="0" max="1000000" value="20" inputmode="decimal" placeholder="e.g. 20" aria-describedby="price-scale-desc">
+        <input type="number" id="input-acceptable" class="popup__input" min="0" max="1000000" step="0.01" value="0.5" inputmode="decimal" placeholder="e.g. 0.50" aria-describedby="price-scale-desc">
         <div class="popup__scale" aria-hidden="true">
           <div class="popup__scale-bar">
             <div class="popup__scale-zone popup__scale-zone--green"></div>
@@ -79,8 +64,13 @@
             <span data-i18n="scale-acceptable">±20%</span>
             <span data-i18n="scale-above">+20%</span>
           </div>
+          <div class="popup__scale-tags">
+            <span class="popup__scale-tag popup__scale-tag--low" title="Low">Low</span>
+            <span class="popup__scale-tag popup__scale-tag--ok" title="OK">OK</span>
+            <span class="popup__scale-tag popup__scale-tag--high" title="High">High</span>
+          </div>
         </div>
-        <span class="popup__field-hint" id="price-scale-desc" data-i18n="price-hint">Green = good price, yellow = average, red = high</span>
+        <span class="popup__field-hint" id="price-scale-desc" data-i18n="price-hint">Lower cost per hour is better. The center band is your acceptable ±20% target range.</span>
       </div>
     </section>
 
@@ -103,7 +93,7 @@
 
     <footer class="popup__footer">
       <div class="popup__footer-info" data-i18n="footer-info">Settings apply immediately to open Steam pages.</div>
-      <div class="popup__footer-author"><span data-i18n="footer-developed-by">Developed by</span> <a href="https://vintlgvard.com/" target="_blank" rel="noopener noreferrer">VintlGvard</a> · <a href="https://github.com/VintlGvard/steam_priceperhour" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+      <div class="popup__footer-author"><span data-i18n="footer-developed-by">Developed by</span> <a href="https://vintlgvard.com/" target="_blank" rel="noopener noreferrer">VintlGvard</a> · <a href="https://github.com/VintlGvard/Steam_PricePerHour" target="_blank" rel="noopener noreferrer">GitHub</a></div>
     </footer>
   </div>
   <script src="popup.js"></script>
