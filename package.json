@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "npm run build:chrome && npm run build:firefox",
-    "postbuild": "node -e \"const fs=require('fs');for(const[b,s,d]of[['chrome','dist/chrome','releases/chrome-unpacked'],['firefox','dist/firefox','releases/firefox-unpacked']]){fs.rmSync(d,{recursive:true,force:true});fs.cpSync(s,d,{recursive:true});console.log('✓ '+d+' updated');}\"",
+    "postbuild": "node -e \"const fs=require('fs');for(const[b,s,d]of[['chrome','dist/chrome','releases/chrome-unpacked']]){fs.rmSync(d,{recursive:true,force:true});fs.cpSync(s,d,{recursive:true});console.log('✓ '+d+' updated');}\"",
     "build:chrome": "webpack --config webpack.chrome.js --mode production",
     "build:firefox": "webpack --config webpack.firefox.js --mode production",
     "release": "npm run version -- --auto && npm run build && node scripts/pack.js",
