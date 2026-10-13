@@ -8,9 +8,6 @@ node_modules/
 dist/
 releases/
 
-# Local tests
-/tests/
-
 # npm debug/logs
 npm-debug.log*
 yarn-debug.log*

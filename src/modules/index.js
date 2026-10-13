@@ -5,9 +5,12 @@ export {
   secondsToHours,
   fmtH,
   clamp,
+  normalizeName,
   numericId,
   debounce,
   throttle,
+  isSteamUrl,
+  extractAppIdFromUrl,
   isAppPage,
   isBundlePage,
 } from "./utils.js";
@@ -33,4 +36,9 @@ export {
   setBadgeMeta,
 } from "./badge.js";
 export { domObserver, OBSERVER_DEBOUNCE_MS, OBSERVER_THROTTLE_MS } from "./observer.js";
-export { fetchPlaytime, fetchPlaytimeBatch } from "./api.js";
+export {
+  fetchPlaytime,
+  fetchPlaytimeBatch,
+  validatePlaytimeResponse,
+  validateBatchResponse,
+} from "./api.js";

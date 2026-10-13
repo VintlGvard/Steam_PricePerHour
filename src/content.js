@@ -39,7 +39,6 @@ import {
   const _queue = [];
   const _inflight = new Map();
   let _busy = false;
-  let _cacheGeneration = 0;
 
   function enqueue(steamAppId) {
     const key = String(steamAppId);
@@ -51,8 +50,9 @@ import {
       drainQueue();
     });
     _inflight.set(key, promise);
-    const cleanup = () => _inflight.delete(key);
-    promise.then(cleanup, cleanup);
+    promise.finally(() => {
+      _inflight.delete(key);
+    });
     return promise;
   }
 
@@ -83,7 +83,6 @@ import {
       return cached;
     }
 
-    const generation = _cacheGeneration;
     let response;
     try {
       response = await chrome.runtime.sendMessage({
@@ -145,11 +144,10 @@ import {
     const plusH = secondsToHours(data.comp_plus);
     const compH = secondsToHours(data.comp_100);
 
-    if (mainH === 0 && plusH === 0 && compH === 0) {
+    if (mainH === 0 && plusH === 0) {
       return null;
     }
 
-    if (generation !== _cacheGeneration) return null;
     const result = { main: mainH, plus: plusH, completionist: compH };
     await cacheManager.setCacheByAppId(steamAppId, mainH, plusH, compH);
     return result;
@@ -299,7 +297,8 @@ import {
     const uncachedIds = [];
 
     for (const appId of appIds) {
-      const title = titleMap.get(appId) || "";
+      const title = titleMap.get(appId);
+      if (!title) continue;
       try {
         const cacheResult = await cacheManager.getCachedHours(String(appId), title);
         if (cacheResult.cached) {
@@ -312,7 +311,6 @@ import {
 
     if (uncachedIds.length > 0) {
       try {
-        const generation = _cacheGeneration;
         let batchResponse = null;
         for (let attempt = 1; attempt <= RATE_LIMIT_RETRY_MAX; attempt++) {
           batchResponse = await fetchPlaytimeBatch(uncachedIds);
@@ -326,13 +324,14 @@ import {
           }
           await sleep(RATE_LIMIT_RETRY_DELAY_MS);
         }
-        if (generation !== _cacheGeneration) return;
-        if (batchResponse && !batchResponse.ok) {
-          const badge = createErrorBadge(batchResponse.errorCode);
-          badge.classList.add("spph-ratio-badge--bundle");
-          if (existingBadge) existingBadge.replaceWith(badge);
-          else insertBadgeInPurchaseArea(wrapper, badge);
-          return;
+        if (
+          batchResponse &&
+          !batchResponse.ok &&
+          (batchResponse.errorCode === "auth_missing" ||
+            batchResponse.errorCode === "auth_invalid" ||
+            batchResponse.errorCode === "rate_limited")
+        ) {
+          console.warn("[SPPH Content] Batch API error:", batchResponse.errorCode);
         } else if (batchResponse && batchResponse.ok && Array.isArray(batchResponse.data)) {
           const gamesByAppId = new Map();
           for (const game of batchResponse.data) {
@@ -346,12 +345,12 @@ import {
             const mainH = secondsToHours(game.comp_main);
             const plusH = secondsToHours(game.comp_plus);
             const compH = secondsToHours(game.comp_100);
-            if (mainH === 0 && plusH === 0 && compH === 0) {
+            if (mainH === 0 && plusH === 0) {
               continue;
             }
             const data = { main: mainH, plus: plusH, completionist: compH };
             cacheManager.setCacheByAppId(appId, mainH, plusH, compH);
-            results.set(Number(appId), data);
+            results.set(appId, data);
           }
         }
       } catch {}
@@ -460,12 +459,7 @@ import {
 
   function findCards(root) {
     const set = new Set();
-    for (const sel of [
-      SELECTORS.searchRow,
-      SELECTORS.saleCapsule,
-      SELECTORS.dlcRow,
-      'a._2V8zu-797jsZm1qtHNFXhS[href*="/app/"]',
-    ]) {
+    for (const sel of [SELECTORS.searchRow, SELECTORS.saleCapsule, SELECTORS.dlcRow]) {
       root.querySelectorAll(sel).forEach((el) => set.add(el));
     }
     root.querySelectorAll(SELECTORS.spotlight).forEach((el) => {
@@ -485,11 +479,13 @@ import {
       });
     }
 
-    root.querySelectorAll("[data-ds-bundle-data]").forEach((el) => set.add(el));
     if (isBundlePage()) {
       root
-        .querySelectorAll(".game_area_purchase_game.bundle[data-ds-bundleid]")
+        .querySelectorAll(
+          ".game_area_purchase_game.bundle[data-ds-bundleid], [data-ds-bundle-data]",
+        )
         .forEach((el) => set.add(el));
+
       root
         .querySelectorAll(".bundle_package_item .tab_item[data-ds-appid]")
         .forEach((el) => set.add(el));
@@ -614,13 +610,6 @@ import {
 
   settingsManager.listenForChanges(() => {
     rerenderBadges();
-    scheduleScan();
-  });
-  chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && changes.spph_cache_epoch) {
-      _cacheGeneration++;
-      scheduleScan();
-    }
   });
 
   async function boot() {

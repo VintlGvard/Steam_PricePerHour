@@ -168,11 +168,7 @@ export function createBadge(spphResult, priceInfo) {
     tipLines.push(labels.price + ": " + curr + ratioFmt.format(priceInfo.amount));
     if (priceInfo.currencyCode) {
       const modeInfo =
-        mode === "completionist"
-          ? labels.completionist
-          : mode === "plus"
-            ? labels.plus
-            : labels.story;
+        mode === "completionist" ? labels.completionist : mode === "plus" ? labels.plus : labels.story;
       tipLines.push(
         labels.acceptable +
           ": " +
@@ -206,7 +202,7 @@ export function createPlaceholderBadge() {
 
   const timeSpan = document.createElement("span");
   timeSpan.className = "spph-ratio-badge__time";
-  timeSpan.textContent = (settingsManager.language === "ru" ? "Время: " : "Playtime: ") + "…";
+  timeSpan.textContent = "Playtime: …";
   badge.appendChild(timeSpan);
 
   const ratioSpan = document.createElement("span");
@@ -253,38 +249,17 @@ export function createErrorBadge(errorCode) {
   return badge;
 }
 
-const purchaseObservers = new WeakMap();
-
 export function insertBadgeInPurchaseArea(wrapper, badge) {
   const purchaseArea =
     wrapper.querySelector(".game_area_purchase_game") ||
     wrapper.querySelector(".game_area_purchase_game_wrapper") ||
     wrapper;
 
-  const action =
-    purchaseArea.querySelector(
-      ".game_purchase_action_bg:has(.btn_addtocart):has(.discount_block, .game_purchase_price)",
-    ) || purchaseArea.querySelector(".game_purchase_action_bg");
-  if (action) {
-    action.prepend(badge);
-    const price = action.querySelector(".discount_prices, .game_purchase_price");
-    const align = () => {
-      if (!price || !action.offsetWidth) return;
-      const actionRect = action.getBoundingClientRect();
-      const priceRect = price.getBoundingClientRect();
-      action.style.setProperty(
-        "--spph-price-left",
-        `${Math.max(0, priceRect.left - actionRect.left)}px`,
-      );
-    };
-    align();
-    if (price && !purchaseObservers.has(action)) {
-      const observer = new window.ResizeObserver(align);
-      observer.observe(action);
-      observer.observe(price);
-      purchaseObservers.set(action, observer);
-    }
-  } else purchaseArea.prepend(badge);
+  if (purchaseArea && purchaseArea.parentNode) {
+    purchaseArea.parentNode.insertBefore(badge, purchaseArea);
+  } else {
+    wrapper.appendChild(badge);
+  }
 }
 
 export function getBadgeMeta(badge) {

@@ -1,11 +1,11 @@
 const EVENT_NAMES = {
-  SETTINGS_CHANGED: "spph:settings:changed",
-  CACHE_UPDATED: "spph:cache:updated",
-  BADGE_CREATED: "spph:badge:created",
-  BADGE_UPDATED: "spph:badge:updated",
-  CARD_PROCESSED: "spph:card:processed",
-  API_REQUEST: "spph:api:request",
-  API_RESPONSE: "spph:api:response",
+  SETTINGS_CHANGED: 'spph:settings:changed',
+  CACHE_UPDATED: 'spph:cache:updated',
+  BADGE_CREATED: 'spph:badge:created',
+  BADGE_UPDATED: 'spph:badge:updated',
+  CARD_PROCESSED: 'spph:card:processed',
+  API_REQUEST: 'spph:api:request',
+  API_RESPONSE: 'spph:api:response',
 };
 
 class EventBus {

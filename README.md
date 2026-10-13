@@ -81,8 +81,9 @@ The `releases/steam-priceperhour-chrome.zip` is also suitable for direct upload 
 
 **Option C — unpacked folder:**
 
-1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on…** and select `dist/firefox/manifest.json` after a local build. No signature setting change is needed for temporary loading.
+1. In `about:config`, set `xpinstall.signatures.required` to `false` (required only for unpacked/unsigned installs)
+2. Open `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on…** and select the `releases/firefox-unpacked/manifest.json` file (or `dist/firefox/manifest.json` after a local build)
 
 ## ⚙️ Settings
 
@@ -157,7 +158,7 @@ Both builds share the same source code — only the manifest differs (MV3 vs MV2
 
 - **Steam DOM changes** — badges depend on Steam's markup (CSS selectors like `.search_result_row`, `.sale_capsule_target`, `.game_area_dlc_row`, `[data-ds-bundle-data]`). If Valve ships a redesign, some selectors may silently break until the extension is updated.
 - **API availability** — a game without an entry in the SPPH database shows no ratio; the "not found" result is suppressed in memory only, so a page reload always retries the API.
-- **Partial bundle coverage** — bundle playtime includes only games returned by the API; missing entries can make the price/hour ratio incomplete. Titles are not required for AppID lookups.
+- **Bundle items without titles** — some bundle payloads (from `data-ds-bundle-data`) list items without readable titles; those items are skipped, so the bundle aggregate may cover only part of the bundle.
 - **Cache freshness** — playtime data is cached for up to 7 days and only refreshed when the badge is rendered for a cached game or cache is cleared manually.
 
 ## 🔧 Development
@@ -184,7 +185,7 @@ npm run build:firefox  # Build Firefox extension only
 npm run release        # Build and package for distribution (creates ZIP/XPI)
 ```
 
-Build output is in `dist/chrome/` and `dist/firefox/`. The `postbuild` step copies the Chrome bundle to `releases/chrome-unpacked/`. For Firefox, load `dist/firefox/manifest.json` temporarily. `npm run release` additionally packages them as `releases/steam-priceperhour-chrome.zip` and `releases/steam-priceperhour-firefox.xpi`.
+Build output is in `dist/chrome/` and `dist/firefox/`. The `postbuild` step copies each bundle to `releases/chrome-unpacked/` and `releases/firefox-unpacked/`. `npm run release` additionally packages them as `releases/steam-priceperhour-chrome.zip` and `releases/steam-priceperhour-firefox.xpi`.
 
 ### Version Management
 
@@ -224,9 +225,7 @@ npm run format:check   # Check formatting
 Load the built extension as an unpacked extension:
 
 - **Chrome**: Load the `releases/chrome-unpacked/` folder (or `dist/chrome/` after a local build)
-- **Firefox**: Load `dist/firefox/manifest.json`
-
-Regression checks: `npm test`. Local GUI fixtures with mocked extension APIs: `npm run test:gui`, then open `http://127.0.0.1:4173/`. Fixtures do not contact the real API or prove browser-extension permissions on live Steam.
+- **Firefox**: Load `releases/firefox-unpacked/manifest.json` (or `dist/firefox/manifest.json`)
 
 Then test on `store.steampowered.com`.
 

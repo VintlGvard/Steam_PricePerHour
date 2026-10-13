@@ -1,10 +1,9 @@
-import { eventBus, EVENT_NAMES } from "./events.js";
+import { eventBus, EVENT_NAMES } from './events.js';
 
-const CACHE_PREFIX = "spph_cache_v4_app_";
-const CACHE_NOTFOUND = "spph_nf_v4_app_";
-const CACHE_PREFIX_LEGACY = "spph_cache_v3_";
-const CACHE_NOTFOUND_LEGACY = "spph_nf_v3_";
-const EPOCH_MARKER = "spph_cache_epoch";
+const CACHE_PREFIX = 'spph_cache_v4_app_';
+const CACHE_NOTFOUND = 'spph_nf_v4_app_';
+const CACHE_PREFIX_LEGACY = 'spph_cache_v3_';
+const CACHE_NOTFOUND_LEGACY = 'spph_nf_v3_';
 
 const TTL_FOUND = 7 * 24 * 60 * 60 * 1000;
 const TTL_NOTFOUND = 0;
@@ -24,10 +23,9 @@ class CacheManager {
   }
 
   async getCacheByAppId(appId) {
-    appId = String(appId);
-    const memory = this._memoryCache.get(appId);
-    if (memory && Date.now() - memory.timestamp <= TTL_FOUND) return memory;
-    this._memoryCache.delete(appId);
+    if (this._memoryCache.has(appId)) {
+      return this._memoryCache.get(appId);
+    }
 
     const key = this.appIdCacheKey(appId);
     try {
@@ -45,7 +43,6 @@ class CacheManager {
   }
 
   async setCacheByAppId(appId, main, plus, completionist) {
-    appId = String(appId);
     const key = this.appIdCacheKey(appId);
     const entry = { main, plus, completionist: completionist || 0, timestamp: Date.now() };
 
@@ -54,11 +51,11 @@ class CacheManager {
     try {
       await chrome.storage.local.set({ [key]: entry });
       eventBus.emit(EVENT_NAMES.CACHE_UPDATED, { appId, entry });
-    } catch {}
+    } catch {
+    }
   }
 
   async getNotFoundByAppId(appId) {
-    appId = String(appId);
     if (this._memoryNfCache.has(appId)) {
       return true;
     }
@@ -72,12 +69,13 @@ class CacheManager {
         this._memoryNfCache.add(appId);
         return true;
       }
-    } catch {}
+    } catch {
+    }
     return false;
   }
 
   async markNotFoundByAppId(appId) {
-    this._memoryNfCache.add(String(appId));
+    this._memoryNfCache.add(appId);
   }
 
   nameCacheKey(name) {
@@ -89,11 +87,11 @@ class CacheManager {
   }
 
   normalizeName(raw) {
-    if (!raw) return "";
+    if (!raw) return '';
     return raw
-      .replace(/[\u2122\u00AE\u00A9]/g, "")
-      .replace(/[:;!?.\-,/\\'"„""–—]+/g, " ")
-      .replace(/\s+/g, " ")
+      .replace(/[\u2122\u00AE\u00A9]/g, '')
+      .replace(/[:;!?.\-,/\\'"„""–—]+/g, ' ')
+      .replace(/\s+/g, ' ')
       .trim()
       .toLowerCase();
   }
@@ -119,7 +117,8 @@ class CacheManager {
       const entry = data[key];
       if (!entry || !entry.timestamp) return false;
       if (Date.now() - entry.timestamp < TTL_NOTFOUND) return true;
-    } catch {}
+    } catch {
+    }
     return false;
   }
 
@@ -147,9 +146,10 @@ class CacheManager {
     try {
       const all = await chrome.storage.local.get(null);
       const keys = Object.keys(all).filter(
-        (k) => k !== EPOCH_MARKER && (k.startsWith("spph_cache_") || k.startsWith("spph_nf_")),
+        (k) =>
+          k.startsWith('spph_cache_') ||
+          k.startsWith('spph_nf_'),
       );
-      await chrome.storage.local.set({ [EPOCH_MARKER]: Date.now() });
       if (keys.length > 0) {
         await chrome.storage.local.remove(keys);
       }
@@ -161,24 +161,11 @@ class CacheManager {
     }
   }
 
-  resetEpoch() {
+  clearMemoryCache() {
     this._memoryCache.clear();
     this._memoryNfCache.clear();
   }
 }
-
-chrome.storage.onChanged.addListener((changes, area) => {
-  if (area !== "local") return;
-  if (changes[EPOCH_MARKER]) cacheManager.resetEpoch();
-  for (const key of Object.keys(changes)) {
-    if (key.startsWith(CACHE_PREFIX)) {
-      cacheManager._memoryCache.delete(key.slice(CACHE_PREFIX.length));
-    }
-    if (key.startsWith(CACHE_NOTFOUND)) {
-      cacheManager._memoryNfCache.delete(key.slice(CACHE_NOTFOUND.length));
-    }
-  }
-});
 
 export const cacheManager = new CacheManager();
 export { TTL_FOUND, TTL_NOTFOUND };
