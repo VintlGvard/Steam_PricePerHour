@@ -1,6 +1,6 @@
 {
   "name": "steam-priceperhour",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Price/hour insights for Steam.",
   "private": true,
   "scripts": {
@@ -17,6 +17,8 @@
     "dev": "npm run dev:chrome",
     "dev:chrome": "webpack --config webpack.chrome.js --mode development --watch",
     "dev:firefox": "webpack --config webpack.firefox.js --mode development --watch",
+    "test": "node tests/check.cjs",
+    "test:gui": "node tests/serve.cjs",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",
