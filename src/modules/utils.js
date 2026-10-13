@@ -14,19 +14,9 @@ export function clamp(val, min, max) {
   return Math.max(min, Math.min(max, Math.round(n * 100) / 100));
 }
 
-export function normalizeName(raw) {
-  if (!raw) return '';
-  return raw
-    .replace(/[\u2122\u00AE\u00A9]/g, '')
-    .replace(/[:;!?.\-,/\\'"„""–—]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
-}
-
 export function numericId(val) {
   const n = Number(val);
-  return Number.isFinite(n) && n > 0 ? n : 0;
+  return Number.isSafeInteger(n) && n > 0 ? n : 0;
 }
 
 export function debounce(fn, delay) {
@@ -40,27 +30,13 @@ export function debounce(fn, delay) {
 export function throttle(fn, limit) {
   let inThrottle = false;
   return function (...args) {
-    if (!inThrottle) {
+    if (inThrottle) return;
+    inThrottle = true;
+    setTimeout(() => {
+      inThrottle = false;
       fn.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
+    }, limit);
   };
-}
-
-export function isSteamUrl(url) {
-  try {
-    const u = new URL(url);
-    return u.protocol === 'https:' &&
-      (u.hostname === 'store.steampowered.com' || u.hostname === 'steampowered.com');
-  } catch {
-    return false;
-  }
-}
-
-export function extractAppIdFromUrl(url) {
-  const match = url.match(/\/app\/(\d+)/);
-  return match ? match[1] : null;
 }
 
 export function isAppPage() {

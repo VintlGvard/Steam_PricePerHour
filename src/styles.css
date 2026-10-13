@@ -17,7 +17,9 @@
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: default;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .spph-ratio-badge:hover,
@@ -33,15 +35,27 @@
 
 .spph-ratio-badge--dynamic {
   margin: 0 0 0 5px;
-  background: hsl(var(--spph-hue) var(--spph-saturation) var(--spph-lightness) / calc(0.20 + 0.35 * var(--spph-intensity)));
-  border-color: hsl(var(--spph-hue) var(--spph-saturation) var(--spph-lightness) / calc(0.45 + 0.45 * var(--spph-intensity)));
+  background: hsl(
+    var(--spph-hue) var(--spph-saturation) var(--spph-lightness) /
+      calc(0.2 + 0.35 * var(--spph-intensity))
+  );
+  border-color: hsl(
+    var(--spph-hue) var(--spph-saturation) var(--spph-lightness) /
+      calc(0.45 + 0.45 * var(--spph-intensity))
+  );
   color: hsl(var(--spph-hue) var(--spph-saturation) 85%);
 }
 
 .spph-ratio-badge--dynamic:hover,
 .spph-ratio-badge--dynamic:focus-visible {
-  background: hsl(var(--spph-hue) var(--spph-saturation) var(--spph-lightness) / calc(0.30 + 0.35 * var(--spph-intensity)));
-  border-color: hsl(var(--spph-hue) var(--spph-saturation) var(--spph-lightness) / calc(0.60 + 0.40 * var(--spph-intensity)));
+  background: hsl(
+    var(--spph-hue) var(--spph-saturation) var(--spph-lightness) /
+      calc(0.3 + 0.35 * var(--spph-intensity))
+  );
+  border-color: hsl(
+    var(--spph-hue) var(--spph-saturation) var(--spph-lightness) /
+      calc(0.6 + 0.4 * var(--spph-intensity))
+  );
 }
 
 .carousel_items.responsive_scroll_snap_ctn .spph-ratio-badge--dynamic {
@@ -202,27 +216,53 @@
   padding-left: 6px;
 }
 
-.game_purchase_action .spph-ratio-badge--app-page.spph-ratio-badge--dynamic,
-.game_purchase_action .spph-ratio-badge--bundle.spph-ratio-badge--dynamic {
-  margin: 0 6px 0 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 3px;
+.game_area_purchase_game_wrapper:has(.game_purchase_action_bg > .spph-ratio-badge) {
+  padding-bottom: 30px;
 }
 
-/* Layout compensation for badges. Applied only while the extension is
-   enabled (content script toggles html.spph-page-shift), so disabling
-   the calculation restores Steam's original layout. */
-html.spph-page-shift .game_area_dlc_row .game_area_dlc_price {
+.game_purchase_action_bg:has(> .spph-ratio-badge) {
+  position: relative;
+}
+
+.game_purchase_action
+  .game_purchase_action_bg
+  > .spph-ratio-badge:is(.spph-ratio-badge--app-page, .spph-ratio-badge--bundle) {
+  position: absolute;
+  top: 100%;
+  left: var(--spph-price-left, 0px);
+  right: 0;
+  width: auto;
+  max-width: none;
+  height: 30px;
+  min-height: 30px;
+  z-index: 1;
+  box-sizing: border-box;
+  justify-content: center;
+  margin: 0;
+  border-radius: 0 0 3px 3px;
+}
+
+.game_area_dlc_price:has(> .spph-ratio-badge) {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
-@media screen and (min-width: 751px) {
-  html.spph-page-shift .search_released,
-  html.spph-page-shift .search_reviewscore {
-    position: relative;
-    left: -100px;
+.game_area_dlc_row .game_area_dlc_price > .spph-ratio-badge {
+  flex-shrink: 0;
+  align-self: center;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.spph-ratio-badge:focus-visible {
+  outline: 2px solid #66c0f4;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spph-ratio-badge {
+    transition: none;
   }
 }
 
@@ -237,6 +277,15 @@ html.spph-page-shift .game_area_dlc_row .game_area_dlc_price {
   max-width: 280px;
 }
 
+.hWF8eniTajf4-mfZvbK3F > .spph-ratio-badge {
+  align-self: stretch;
+  justify-content: center;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
 .game_area_dlc_row .spph-ratio-badge--dynamic .spph-ratio-badge__ratio {
   border-top: 0;
   margin-top: 0;
@@ -245,5 +294,3 @@ html.spph-page-shift .game_area_dlc_row .game_area_dlc_price {
   border-left: 1px solid rgba(255, 255, 255, 0.08);
   padding-left: 6px;
 }
-
-

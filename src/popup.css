@@ -8,7 +8,7 @@
 
 body {
   width: 400px;
-  max-width: 400px;
+  max-width: 100vw;
   overflow-x: hidden;
   font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
   font-size: 13px;
@@ -20,7 +20,7 @@ body {
 }
 
 .popup {
-  padding: 20px 22px;
+  padding: 12px 16px;
   max-width: 400px;
   margin: 0 auto;
   display: flex;
@@ -72,22 +72,27 @@ body {
 
 .popup__subtitle {
   font-size: 11px;
-  color: #6d8fa7;
+  color: #94adc0;
   line-height: 1.3;
 }
 
 .popup__section {
-  margin-bottom: 16px;
-  padding: 14px 16px;
+  margin-bottom: 8px;
+  padding: 8px 12px;
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 10px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 .popup__section:hover {
   border-color: rgba(102, 192, 244, 0.3);
-  box-shadow: 0 0 18px rgba(102, 192, 244, 0.09), 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 0 18px rgba(102, 192, 244, 0.09),
+    0 2px 8px rgba(0, 0, 0, 0.2);
   transform: translateY(-1px);
 }
 
@@ -97,8 +102,8 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #66c0f4;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
   border-bottom: 1px solid rgba(102, 192, 244, 0.15);
 }
 
@@ -131,7 +136,7 @@ body {
 .popup__field-hint {
   display: block;
   font-size: 11px;
-  color: #6d8fa7;
+  color: #94adc0;
   margin-top: 6px;
   line-height: 1.4;
 }
@@ -146,12 +151,15 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 14px;
+  padding: 5px 10px;
   border-radius: 8px;
   border: 1.5px solid rgba(255, 255, 255, 0.07);
   background: rgba(15, 25, 40, 0.5);
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .popup__radio-card:hover {
@@ -166,7 +174,9 @@ body {
 .popup__radio-card:has(input[type="radio"]:checked) {
   border-color: rgba(102, 192, 244, 0.45);
   background: rgba(102, 192, 244, 0.08);
-  box-shadow: 0 0 16px rgba(102, 192, 244, 0.06), inset 0 0 0 1px rgba(102, 192, 244, 0.06);
+  box-shadow:
+    0 0 16px rgba(102, 192, 244, 0.06),
+    inset 0 0 0 1px rgba(102, 192, 244, 0.06);
 }
 
 .popup__radio-card input[type="radio"] {
@@ -183,13 +193,18 @@ body {
   border-radius: 50%;
   border: 2px solid #3a5a7a;
   flex-shrink: 0;
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .popup__radio-card input[type="radio"]:checked ~ .popup__radio-indicator {
   background: #66c0f4;
   border-color: #93d1f5;
-  box-shadow: 0 0 0 3px rgba(102, 192, 244, 0.18), 0 0 10px rgba(102, 192, 244, 0.25);
+  box-shadow:
+    0 0 0 3px rgba(102, 192, 244, 0.18),
+    0 0 10px rgba(102, 192, 244, 0.25);
 }
 
 .popup__radio-card input[type="radio"]:focus-visible ~ .popup__radio-indicator {
@@ -213,7 +228,7 @@ body {
 
 .popup__radio-desc {
   font-size: 11px;
-  color: #6d8fa7;
+  color: #94adc0;
   line-height: 1.3;
 }
 
@@ -228,7 +243,10 @@ body {
   border: 1.5px solid rgba(58, 90, 122, 0.6);
   border-radius: 8px;
   outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -259,7 +277,9 @@ body {
 .popup__input:focus {
   border-color: #66c0f4;
   background: rgba(10, 18, 30, 0.95);
-  box-shadow: 0 0 0 3px rgba(102, 192, 244, 0.25), 0 0 16px rgba(102, 192, 244, 0.12);
+  box-shadow:
+    0 0 0 3px rgba(102, 192, 244, 0.25),
+    0 0 16px rgba(102, 192, 244, 0.12);
 }
 
 .popup__input:focus-visible {
@@ -278,7 +298,10 @@ body {
   outline: none;
   appearance: auto;
   cursor: pointer;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
 }
 
 .popup__select:hover {
@@ -289,7 +312,9 @@ body {
 .popup__select:focus {
   border-color: #66c0f4;
   background: rgba(15, 25, 40, 0.9);
-  box-shadow: 0 0 0 3px rgba(102, 192, 244, 0.15), 0 0 12px rgba(102, 192, 244, 0.06);
+  box-shadow:
+    0 0 0 3px rgba(102, 192, 244, 0.15),
+    0 0 12px rgba(102, 192, 244, 0.06);
 }
 
 .popup__select:focus-visible {
@@ -311,7 +336,9 @@ body {
 .popup__scale-zone {
   flex: 1;
   border-radius: 3px;
-  transition: filter 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    filter 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .popup__scale:hover .popup__scale-zone--green {
@@ -339,11 +366,13 @@ body {
 }
 
 .popup__scale-labels {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  text-align: center;
   margin-top: 4px;
   font-size: 10px;
-  color: #6d8fa7;
+  color: #94adc0;
 }
 
 .popup__scale-tags {
@@ -361,7 +390,9 @@ body {
   padding: 2px 8px;
   border-radius: 10px;
   cursor: default;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .popup__scale-tag:hover {
@@ -403,7 +434,11 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: opacity 0.15s ease, background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    background 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
 }
 
 .popup__btn:active {
@@ -448,7 +483,7 @@ body {
 
 .popup__footer {
   font-size: 11px;
-  color: #6d8fa7;
+  color: #94adc0;
   margin-top: 8px;
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -460,7 +495,7 @@ body {
 }
 
 .popup__footer-author {
-  color: #6d8fa7;
+  color: #94adc0;
 }
 
 .popup__footer-author a {

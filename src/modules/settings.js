@@ -1,14 +1,14 @@
-import { eventBus, EVENT_NAMES } from './events.js';
+import { eventBus, EVENT_NAMES } from "./events.js";
 
-const SETTINGS_KEY = 'spph_settings';
+const SETTINGS_KEY = "spph_settings";
 
-const VALID_MODES = ['main', 'plus', 'completionist'];
-const VALID_LANGUAGES = ['ru', 'en'];
+const VALID_MODES = ["main", "plus", "completionist"];
+const VALID_LANGUAGES = ["ru", "en"];
 
 const DEFAULTS = {
-  valueMode: 'main',
+  valueMode: "main",
   acceptablePrice: 0.5,
-  language: 'en',
+  language: "en",
 };
 
 class SettingsManager {
@@ -40,10 +40,13 @@ class SettingsManager {
   }
 
   parseSettings(raw) {
-    const isRu = /^ru/.test(navigator.language || '');
+    const isRu = /^ru/.test(navigator.language || "");
 
     const legacyFallback = this.clampSetting(
-      raw.targetThreshold ?? raw.targetRubThreshold ?? raw.goodRubThreshold ?? DEFAULTS.acceptablePrice,
+      raw.targetThreshold ??
+        raw.targetRubThreshold ??
+        raw.goodRubThreshold ??
+        DEFAULTS.acceptablePrice,
       0,
       1000000,
     );
@@ -60,29 +63,26 @@ class SettingsManager {
     let mode = VALID_MODES.includes(raw.valueMode) ? raw.valueMode : null;
     if (!mode) {
       if (raw.showCompletionist === true) {
-        mode = 'completionist';
-      } else if (raw.showPlus !== false) {
-        mode = 'plus';
+        mode = "completionist";
+      } else if (raw.showPlus === true) {
+        mode = "plus";
       } else {
-        mode = 'main';
+        mode = "main";
       }
     }
 
     return {
       valueMode: mode,
       acceptablePrice,
-      language: VALID_LANGUAGES.includes(raw.language)
-        ? raw.language
-        : (isRu ? 'ru' : 'en'),
+      language: VALID_LANGUAGES.includes(raw.language) ? raw.language : isRu ? "ru" : "en",
     };
   }
 
   async load() {
     try {
       const data = await chrome.storage.local.get([SETTINGS_KEY]);
-      const raw = data[SETTINGS_KEY] && typeof data[SETTINGS_KEY] === 'object'
-        ? data[SETTINGS_KEY]
-        : null;
+      const raw =
+        data[SETTINGS_KEY] && typeof data[SETTINGS_KEY] === "object" ? data[SETTINGS_KEY] : null;
 
       if (raw) {
         this._settings = this.parseSettings(raw);
@@ -104,7 +104,11 @@ class SettingsManager {
   validate(settings) {
     return {
       valueMode: VALID_MODES.includes(settings.valueMode) ? settings.valueMode : DEFAULTS.valueMode,
-      acceptablePrice: this.clampSetting(settings.acceptablePrice ?? DEFAULTS.acceptablePrice, 0, 1000000),
+      acceptablePrice: this.clampSetting(
+        settings.acceptablePrice ?? DEFAULTS.acceptablePrice,
+        0,
+        1000000,
+      ),
       language: VALID_LANGUAGES.includes(settings.language) ? settings.language : DEFAULTS.language,
     };
   }
@@ -116,11 +120,11 @@ class SettingsManager {
 
   listenForChanges(handler) {
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== 'local') return;
+      if (area !== "local") return;
       if (changes[SETTINGS_KEY]) {
         const changeData = changes[SETTINGS_KEY];
         const raw = changeData.newValue;
-        if (raw && typeof raw === 'object') {
+        if (raw && typeof raw === "object") {
           this._settings = this.parseSettings(raw);
           handler(this._settings);
         }

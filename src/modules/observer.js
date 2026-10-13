@@ -1,5 +1,5 @@
-import { debounce, throttle } from './utils.js';
-import { eventBus } from './events.js';
+import { debounce, throttle } from "./utils.js";
+import { eventBus } from "./events.js";
 
 const OBSERVER_DEBOUNCE_MS = 500;
 const OBSERVER_THROTTLE_MS = 1000;
@@ -19,7 +19,16 @@ class DOMObserver {
     this._observer = new MutationObserver((mutations) => {
       let hasNewNodes = false;
       for (const mutation of mutations) {
-        if (mutation.addedNodes.length > 0) {
+        if (
+          !(
+            mutation.target.nodeType === 1 ? mutation.target : mutation.target.parentElement
+          )?.closest(".spph-ratio-badge") &&
+          (mutation.type === "characterData" ||
+            mutation.type === "attributes" ||
+            [...mutation.addedNodes, ...mutation.removedNodes].some(
+              (node) => !(node.nodeType === 1 && node.matches(".spph-ratio-badge")),
+            ))
+        ) {
           hasNewNodes = true;
           break;
         }
@@ -32,6 +41,14 @@ class DOMObserver {
     this._observer.observe(document.body, {
       childList: true,
       subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: [
+        "data-price-final",
+        "data-price-currency",
+        "data-ds-appid",
+        "data-ds-bundle-data",
+      ],
     });
 
     this._throttledProcess();
@@ -51,7 +68,7 @@ class DOMObserver {
       } catch {}
     }
 
-    eventBus.emit('spph:observer:processed');
+    eventBus.emit("spph:observer:processed");
   }
 }
 
